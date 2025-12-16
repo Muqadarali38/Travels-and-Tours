@@ -1,0 +1,147 @@
+export const umrahPackages = [
+  {
+    id: 322,
+    title: "5 Nights 5 Star Umrah Package",
+    nights: 5,
+    stars: 5,
+    makkahNights: 3,
+    madinahNights: 2,
+    makkahHotel: "Sheraton Makkah Jabal al Kaaba",
+    madinahHotel: "Crowne Plaza",
+    price: 1385,
+    image: "https://via.placeholder.com/400x300?text=5+Star+Umrah"
+  },
+  {
+    id: 296,
+    title: "5 Nights 3 Star Umrah Packages",
+    nights: 5,
+    stars: 3,
+    makkahNights: 3,
+    madinahNights: 2,
+    makkahHotel: "DAR AL EIMAN AL SUD HOTEL",
+    madinahHotel: "Dar Al Eiman Al Nour",
+    price: 1732,
+    image: "https://via.placeholder.com/400x300?text=3+Star+Umrah"
+  },
+  {
+    id: 298,
+    title: "5 Nights 3 Star Umrah Package",
+    nights: 5,
+    stars: 3,
+    makkahNights: 3,
+    madinahNights: 2,
+    makkahHotel: "Dar Al Eiman Al Khalil",
+    madinahHotel: "Al Eiman Ohud",
+    price: 1753,
+    image: "https://via.placeholder.com/400x300?text=3+Star+Umrah"
+  },
+  {
+    id: 301,
+    title: "7 Nights 3 Star Umrah Package",
+    nights: 7,
+    stars: 3,
+    makkahNights: 4,
+    madinahNights: 3,
+    makkahHotel: "Al Eiman Ohud",
+    madinahHotel: "NADA AL SALAM",
+    price: 1773,
+    image: "https://via.placeholder.com/400x300?text=3+Star+Umrah"
+  },
+  {
+    id: 299,
+    title: "7 Nights 3 Star Umrah Packages",
+    nights: 7,
+    stars: 3,
+    makkahNights: 4,
+    madinahNights: 3,
+    makkahHotel: "Nawazi Watheer",
+    madinahHotel: "Al Eiman Al Qibla",
+    price: 1787,
+    image: "https://via.placeholder.com/400x300?text=3+Star+Umrah"
+  },
+  {
+    id: 311,
+    title: "5 Nights 4 Star Umrah Packages",
+    nights: 5,
+    stars: 4,
+    makkahNights: 3,
+    madinahNights: 2,
+    makkahHotel: "Dar Al Eiman Grand",
+    madinahHotel: "Dar Al Eiman Al Manar",
+    price: 1803,
+    image: "https://via.placeholder.com/400x300?text=4+Star+Umrah"
+  },
+  {
+    id: 312,
+    title: "5 Nights 4 Star Umrah Package",
+    nights: 5,
+    stars: 4,
+    makkahNights: 3,
+    madinahNights: 2,
+    makkahHotel: "Dar Al Eiman Ajyad",
+    madinahHotel: "Al Eiman Taibah",
+    price: 1803,
+    image: "https://via.placeholder.com/400x300?text=4+Star+Umrah"
+  },
+  {
+    id: 302,
+    title: "10 Nights 3 Star Umrah Packages",
+    nights: 10,
+    stars: 3,
+    makkahNights: 5,
+    madinahNights: 5,
+    makkahHotel: "DURRAT DAR AL EIMAN",
+    madinahHotel: "AL ALYA HOTEL",
+    price: 1841,
+    image: "https://via.placeholder.com/400x300?text=3+Star+Umrah"
+  },
+  {
+    id: 303,
+    title: "10 Nights 3 Star Umrah Package",
+    nights: 10,
+    stars: 3,
+    makkahNights: 5,
+    madinahNights: 5,
+    makkahHotel: "JAWHARAH AL EIMAN",
+    madinahHotel: "ZAHA AL MUNAWARA HOTEL",
+    price: 1855,
+    image: "https://via.placeholder.com/400x300?text=3+Star+Umrah"
+  },
+  {
+    id: 332,
+    title: "7 Nights 4 Star Umrah Package",
+    nights: 7,
+    stars: 4,
+    makkahNights: 4,
+    madinahNights: 3,
+    makkahHotel: "AMJAD AL DEAFAH HOTEL",
+    madinahHotel: "Saja Al Madinah",
+    price: 1859,
+    image: "https://via.placeholder.com/400x300?text=4+Star+Umrah"
+  },
+  {
+    id: 318,
+    title: "5 Nights 5 Star Umrah Packages",
+    nights: 5,
+    stars: 5,
+    makkahNights: 3,
+    madinahNights: 2,
+    makkahHotel: "Shaza Makkah",
+    madinahHotel: "Madinah Mövenpick",
+    price: 1889,
+    image: "https://via.placeholder.com/400x300?text=5+Star+Umrah"
+  },
+  {
+    id: 310,
+    title: "10 Nights 4 Star Umrah Package",
+    nights: 10,
+    stars: 4,
+    makkahNights: 5,
+    madinahNights: 5,
+    makkahHotel: "Elaf Ajyad",
+    madinahHotel: "Elaf Meshal Al Salam",
+    price: 1950,
+    image: "https://via.placeholder.com/400x300?text=4+Star+Umrah"
+  }
+]
+
