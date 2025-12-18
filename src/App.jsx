@@ -32,13 +32,18 @@ function App() {
     roomType: 'Double',
     starFilter: 'All'
   })
+  const [searchResults, setSearchResults] = useState(null)
+
+  const handleSearch = (results) => {
+    setSearchResults(results)
+  }
 
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
         <Header />
         <Routes>
-          <Route path="/" element={<Home searchFilters={searchFilters} setSearchFilters={setSearchFilters} />} />
+          <Route path="/" element={<Home searchFilters={searchFilters} setSearchFilters={setSearchFilters} onSearch={handleSearch} searchResults={searchResults} />} />
           <Route path="/umrah-packages" element={<UmrahPackages />} />
           <Route path="/hajj" element={<Hajj />} />
           <Route path="/customize-umrah" element={<CustomizeUmrah />} />

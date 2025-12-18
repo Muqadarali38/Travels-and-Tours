@@ -1,19 +1,124 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-const Hero = ({ searchFilters, setSearchFilters }) => {
-  const airports = [
-    'Calgary (YYC)', 'Edmonton (YEG)', 'Fredericton (YFC)', 'Gander (YQX)',
-    'Halifax (YHZ)', 'Moncton (YQM)', 'Montreal (YUL)', 'Ottawa (YOW)',
-    'Quebec City (YQB)', 'St. Johns (YYT)', 'Toronto (YYZ)', 'Vancouver (YVR)',
-    'Victoria (YYJ)', 'Winnipeg (YWG)'
-  ]
+const Hero = ({ searchFilters, setSearchFilters, onSearch }) => {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [airportsData, setAirportsData] = useState({
+    departureAirports: [],
+    arrivalAirports: [],
+    loading: true,
+    error: null
+  })
 
-  const arrivalAirports = ['Jeddah', 'Dammam', 'Abha', 'Yanbu', 'Taif', 'Riyadh']
   const roomTypes = ['Single', 'Double', 'Triple', 'Quad']
 
-  const handleSubmit = (e) => {
+  // Fetch airports from API
+  useEffect(() => {git add .
+
+    const fetchAirports = async () => {
+      try {
+        setAirportsData(prev => ({ ...prev, loading: true, error: null }))
+        const response = await fetch('http://127.0.0.1:8000/api/airports/')
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch airports')
+        }
+
+        const data = await response.json()
+        
+        setAirportsData({
+          departureAirports: data.departure_airports || [],
+          arrivalAirports: data.arrival_airports || [],
+          loading: false,
+          error: null
+        })
+      } catch (err) {
+        console.error('Error fetching airports:', err)
+        setAirportsData(prev => ({
+          ...prev,
+          loading: false,
+          error: err.message
+        }))
+      }
+    }
+
+    fetchAirports()
+  }, [])
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Search submitted:', searchFilters)
+    setError(null)
+    setLoading(true)
+
+    try {
+      // Build query parameters
+      const params = new URLSearchParams()
+      
+      // Use airport codes directly (API returns codes like "DXB", "JED")
+      if (searchFilters.departure) {
+        params.append('departure_airport', searchFilters.departure)
+      }
+
+      if (searchFilters.arrival) {
+        params.append('arrival_airport', searchFilters.arrival)
+      }
+
+      // Convert room type to lowercase (API expects "double" not "Double")
+      if (searchFilters.roomType) {
+        params.append('room_type', searchFilters.roomType.toLowerCase())
+      }
+
+      // Add other parameters if needed
+      if (searchFilters.adults) {
+        params.append('adults', searchFilters.adults)
+      }
+      if (searchFilters.children) {
+        params.append('children', searchFilters.children)
+      }
+      if (searchFilters.infants) {
+        params.append('infants', searchFilters.infants)
+      }
+      if (searchFilters.makkahNights) {
+        params.append('makkah_nights', searchFilters.makkahNights)
+      }
+      if (searchFilters.madinahNights) {
+        params.append('madinah_nights', searchFilters.madinahNights)
+      }
+
+      // Make API call
+      const response = await fetch(`http://127.0.0.1:8000/api/packages/search/?${params.toString()}`)
+      
+      if (!response.ok) {
+        throw new Error('Failed to search packages')
+      }
+
+      const data = await response.json()
+      
+      // Handle different response formats (array, object with results/data property)
+      let results = data
+      if (data && typeof data === 'object' && !Array.isArray(data)) {
+        results = data.results || data.data || data.packages || []
+      }
+      
+      // Pass results to parent component
+      if (onSearch) {
+        onSearch(results)
+      }
+
+      // Scroll to packages section
+      setTimeout(() => {
+        const packagesSection = document.querySelector('.umrah-pkg-cover')
+        if (packagesSection) {
+          packagesSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, 100)
+
+    } catch (err) {
+      setError(err.message)
+      console.error('Error searching packages:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const updateFilter = (key, value) => {
@@ -54,13 +159,23 @@ const Hero = ({ searchFilters, setSearchFilters }) => {
                 <select
                   value={searchFilters.departure}
                   onChange={(e) => updateFilter('departure', e.target.value)}
-                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all bg-white"
+                  disabled={airportsData.loading}
+                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all bg-white disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <option value="">Select Airport</option>
-                  {airports.map(airport => (
-                    <option key={airport} value={airport}>{airport}</option>
-                  ))}
+                  {airportsData.loading ? (
+                    <option disabled>Loading airports...</option>
+                  ) : airportsData.error ? (
+                    <option disabled>Error loading airports</option>
+                  ) : (
+                    airportsData.departureAirports.map(airport => (
+                      <option key={airport} value={airport}>{airport}</option>
+                    ))
+                  )}
                 </select>
+                {airportsData.error && (
+                  <p className="text-xs text-red-600 mt-1">{airportsData.error}</p>
+                )}
               </div>
 
               <div>
@@ -68,13 +183,23 @@ const Hero = ({ searchFilters, setSearchFilters }) => {
                 <select
                   value={searchFilters.arrival}
                   onChange={(e) => updateFilter('arrival', e.target.value)}
-                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all bg-white"
+                  disabled={airportsData.loading}
+                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all bg-white disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <option value="">Select Airport</option>
-                  {arrivalAirports.map(airport => (
-                    <option key={airport} value={airport}>{airport}</option>
-                  ))}
+                  {airportsData.loading ? (
+                    <option disabled>Loading airports...</option>
+                  ) : airportsData.error ? (
+                    <option disabled>Error loading airports</option>
+                  ) : (
+                    airportsData.arrivalAirports.map(airport => (
+                      <option key={airport} value={airport}>{airport}</option>
+                    ))
+                  )}
                 </select>
+                {airportsData.error && (
+                  <p className="text-xs text-red-600 mt-1">{airportsData.error}</p>
+                )}
               </div>
             </div>
 
@@ -201,11 +326,30 @@ const Hero = ({ searchFilters, setSearchFilters }) => {
               </div>
             </div>
 
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-sky-600 via-cyan-600 to-teal-600 text-white py-4 rounded-xl font-bold text-lg hover:from-sky-700 hover:via-cyan-700 hover:to-teal-700 transition-all shadow-xl hover:shadow-2xl transform hover:scale-[1.02]"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-sky-600 via-cyan-600 to-teal-600 text-white py-4 rounded-xl font-bold text-lg hover:from-sky-700 hover:via-cyan-700 hover:to-teal-700 transition-all shadow-xl hover:shadow-2xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
-              🔍 Search Packages
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Searching...
+                </span>
+              ) : (
+                <span className="flex items-center justify-center gap-2">
+                  🔍 Search Packages
+                </span>
+              )}
             </button>
           </form>
         </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const Packages = ({ searchFilters }) => {
+const Packages = ({ searchFilters, searchResults }) => {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,6 +18,16 @@ const Packages = ({ searchFilters }) => {
   };
 
   useEffect(() => {
+    // If search results are provided, use them
+    if (searchResults !== null) {
+      const results = Array.isArray(searchResults) ? searchResults : [];
+      setPackages(results);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
+    // Otherwise, fetch all packages
     const fetchPackages = async () => {
       try {
         setLoading(true);
@@ -36,7 +46,7 @@ const Packages = ({ searchFilters }) => {
       }
     };
     fetchPackages();
-  }, []);
+  }, [searchResults]);
 
   return (
     <section className="umrah-pkg-cover py-12 bg-gray-50">
