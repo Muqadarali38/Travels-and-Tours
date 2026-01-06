@@ -13,8 +13,7 @@ const Hero = ({ searchFilters, setSearchFilters, onSearch }) => {
   const roomTypes = ['Single', 'Double', 'Triple', 'Quad']
 
   // Fetch airports from API
-  useEffect(() => {git add .
-
+  useEffect(() => {
     const fetchAirports = async () => {
       try {
         setAirportsData(prev => ({ ...prev, loading: true, error: null }))
@@ -54,11 +53,17 @@ const Hero = ({ searchFilters, setSearchFilters, onSearch }) => {
       // Build query parameters
       const params = new URLSearchParams()
       
-      // Use airport codes directly (API returns codes like "DXB", "JED")
+      // Extract airport code from departure (e.g., "Toronto (YYZ)" -> "YYZ")
       if (searchFilters.departure) {
-        params.append('departure_airport', searchFilters.departure)
+        const match = searchFilters.departure.match(/\(([^)]+)\)/)
+        if (match) {
+          params.append('departure_airport', match[1])
+        } else {
+          params.append('departure_airport', searchFilters.departure)
+        }
       }
 
+      // Extract airport code from arrival or use full name
       if (searchFilters.arrival) {
         params.append('arrival_airport', searchFilters.arrival)
       }
@@ -159,8 +164,7 @@ const Hero = ({ searchFilters, setSearchFilters, onSearch }) => {
                 <select
                   value={searchFilters.departure}
                   onChange={(e) => updateFilter('departure', e.target.value)}
-                  disabled={airportsData.loading}
-                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all bg-white"
                 >
                   <option value="">Select Airport</option>
                   {airportsData.loading ? (
@@ -173,9 +177,6 @@ const Hero = ({ searchFilters, setSearchFilters, onSearch }) => {
                     ))
                   )}
                 </select>
-                {airportsData.error && (
-                  <p className="text-xs text-red-600 mt-1">{airportsData.error}</p>
-                )}
               </div>
 
               <div>
@@ -183,8 +184,7 @@ const Hero = ({ searchFilters, setSearchFilters, onSearch }) => {
                 <select
                   value={searchFilters.arrival}
                   onChange={(e) => updateFilter('arrival', e.target.value)}
-                  disabled={airportsData.loading}
-                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all bg-white"
                 >
                   <option value="">Select Airport</option>
                   {airportsData.loading ? (
@@ -197,9 +197,6 @@ const Hero = ({ searchFilters, setSearchFilters, onSearch }) => {
                     ))
                   )}
                 </select>
-                {airportsData.error && (
-                  <p className="text-xs text-red-600 mt-1">{airportsData.error}</p>
-                )}
               </div>
             </div>
 
